@@ -1,0 +1,67 @@
+Basic Components -
+ - Features
+ - step definitions
+ - Test runner class
+ 
+
+Cucumber options -
+Below options apart from "Tags" will be defined in runner class.
+Tags will be defined in feature files.
+i) dryRun - To check all the steps in feature file have corresponding stepdef or not.
+			But it will not execute the code.
+	      - value could be true or false
+ii)  features - path of the feature files
+iii) Glue - path of the step def files
+iv)  Tags - 
+v)   Monochrome - Use to display the console output
+				  in a proper readable format.
+vi)  Format  - To specify the result output format
+             - format is used to generate report in different format like html, xml , json etc
+vii) Strict - if strict is true , it will ensure all the steps are 
+             in feature files are implemented else it will fail
+             
+             
+Datadriven Approach -
+      1. Without using Examples and Scenario Outline
+      2. With using Examples and Scenario Outline
+      3. Examples can be used with Scenario Outline for datadriven testing in feature files
+      4.  Datatables -can be used for one step for one set of data- 
+      		call the raw() method which returns List<List<String>>>.
+      	E.g. - Feature file - 
+      		Then user enters username and password
+			| amitpradhan2011 | Test@1234  |
+			 
+			- Step def
+		@Then("^user enters username and password$")
+		public void user_enters_username_and_password(DataTable credential) {
+		List<List<String >> data=credential.raw();
+		driver.findElement(By.name("username")).sendKeys(data.get(0).get(0));
+		driver.findElement(By.name("password")).sendKeys(data.get(0).get(1));
+	}
+	
+	5. Datadriven using maps -
+	  i) Feature -
+	  	Then user enters username and password 
+		| username 		  | password   |
+		| amitpradhan2011 | Test@1234  |
+	 ii) Step Def -
+	 	@Then("^user enters username and password$")
+		public void user_enters_username_and_password(DataTable credentials) {
+		for (Map<String, String> data : credentials.asMaps(String.class, String.class)) {
+			driver.findElement(By.name("username")).sendKeys(data.get("username"));
+			driver.findElement(By.name("password")).sendKeys(data.get("password"));
+	 	
+      	
+      6. Tags - used to run specific set of testcases
+      
+     	tags={"@SmokeTest,@End2End"} - both the tagged cases will be executed
+		tags = {"~@SmokeTest" , "~@RegressionTest", "~@End2End"}
+		~ is used skip testcases. In above line , all the testcases
+		having abov tags will be ignored. 
+	7. Hooks are used for pre-requisite before each scenarios -
+	   E.g. @Before and @After	
+	  - Two types of hooks, global hook and tagged hook.
+	  - global hook will be executed after each and every scenario
+	  - tagged hook will be executed for a tagged hook
+	  - order can also be maintained using "order"
+      
